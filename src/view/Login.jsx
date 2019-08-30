@@ -1,12 +1,30 @@
 import React from 'react';
 import Header from '../components/Header';
 import {Link} from 'react-router-dom';
+import { userLogin } from "../actions/Login";
 
 class Login extends React.Component{
 
 
-    onSubmit = () => {
+    onSubmit = (e) => {
+        e.preventDefault();
+        const {email , password} = this.state;
+
+        userLogin({
+            email, 
+            password
+        }).then(response => {
+            console.log(response);
+        }).catch(error => {
+        this.setState({err:true,message:'Server Error!'});
+        });
+
         this.props.history.push('/dashboard');
+    }
+
+    onChange(e){
+        const {name, value} = e.target;
+        this.setState({[name]: value});
     }
 
     render(){
@@ -30,13 +48,13 @@ class Login extends React.Component{
                                         <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fa fa-user"></i></span>
                                         </div>
-                                        <input type="text" className="form-control" placeholder="Email"/>
+                                        <input onChange={this.onChange.bind(this)} name="email" type="text" className="form-control" placeholder="Email"/>
                                     </div>
                                     <div className="input-group form-group">
                                         <div className="input-group-prepend">
                                             <span className="input-group-text"><i className="fa fa-key"></i></span>
                                         </div>
-                                        <input type="password" className="form-control" placeholder="password"/>
+                                        <input onChange={this.onChange.bind(this)} name="password" type="password" className="form-control" placeholder="password"/>
                                     </div>
                                     <div className="row align-items-center remember">
                                         <input type="checkbox" />Remember Me
